@@ -1,6 +1,6 @@
-import { Suspense } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { Html, Preload } from '@react-three/drei';
+import { Suspense, useRef } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Html, Preload, Sparkles } from '@react-three/drei';
 import * as THREE from 'three';
 import Logo3D from './Logo3D.jsx';
 
@@ -14,12 +14,39 @@ function LoadingFallback() {
   );
 }
 
+function AnimatedSweepLight() {
+  const lightRef = useRef(null);
+
+  useFrame(({ clock }) => {
+    if (!lightRef.current) return;
+
+    const time = clock.getElapsedTime();
+    const cycle = (time % 7) / 7;
+    const sweep = THREE.MathUtils.smoothstep(cycle, 0.08, 0.85);
+    const pulse = Math.sin(Math.min(cycle / 0.78, 1) * Math.PI);
+
+    lightRef.current.position.x = THREE.MathUtils.lerp(-4.8, 4.8, sweep);
+    lightRef.current.position.y = 1.1 + Math.sin(time * 0.6) * 0.45;
+    lightRef.current.intensity = cycle < 0.82 ? Math.max(0, pulse) * 26 : 0;
+  });
+
+  return (
+    <pointLight
+      ref={lightRef}
+      color="#ff2f35"
+      position={[-4.8, 1.1, 3.2]}
+      intensity={0}
+      distance={8}
+      decay={2}
+    />
+  );
+}
+
 function Scene() {
   return (
     <>
-      <ambientLight color="#ffffff" intensity={0.35} />
+      <ambientLight color="#ffffff" intensity={0.32} />
 
-      {/* Soft white key light */}
       <spotLight
         color="#ffffff"
         position={[3.8, 4.5, 6]}
@@ -30,7 +57,6 @@ function Scene() {
         decay={2}
       />
 
-      {/* Subtle red rim light behind the logo */}
       <pointLight
         color="#dc2528"
         position={[-3.8, 0.6, -2.6]}
@@ -45,6 +71,27 @@ function Scene() {
         intensity={9}
         distance={12}
         decay={2}
+      />
+
+      <AnimatedSweepLight />
+
+      <Sparkles
+        count={42}
+        scale={[6.2, 4.2, 2.4]}
+        size={1.15}
+        speed={0.16}
+        opacity={0.28}
+        noise={0.75}
+        color="#ffffff"
+      />
+      <Sparkles
+        count={14}
+        scale={[5.6, 3.6, 2]}
+        size={1.6}
+        speed={0.12}
+        opacity={0.3}
+        noise={1}
+        color="#dc2528"
       />
 
       <Suspense fallback={<LoadingFallback />}>

@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useLoader, useThree } from '@react-three/fiber';
 import { Float } from '@react-three/drei';
 import * as THREE from 'three';
@@ -6,6 +6,7 @@ import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader.js';
 import logoUrl from '../assets/HWP Logo.svg?url';
 
 const MAX_TILT = THREE.MathUtils.degToRad(3);
+const INTRO_DURATION = 1.7;
 
 function buildExtrudedLogo(svgData) {
   const artwork = new THREE.Group();
@@ -28,12 +29,15 @@ function buildExtrudedLogo(svgData) {
       geometry.computeVertexNormals();
 
       const fillColor = path.color?.clone?.() ?? new THREE.Color('#ffffff');
+      const isRed = fillColor.r > 0.65 && fillColor.g < 0.4;
       const material = new THREE.MeshPhysicalMaterial({
         color: fillColor,
-        metalness: 0.08,
-        roughness: 0.36,
-        clearcoat: 0.22,
-        clearcoatRoughness: 0.62,
+        emissive: fillColor,
+        emissiveIntensity: isRed ? 0.075 : 0.02,
+        metalness: 0.1,
+        roughness: 0.3,
+        clearcoat: 0.3,
+        clearcoatRoughness: 0.48,
         side: THREE.DoubleSide,
       });
 
@@ -44,7 +48,6 @@ function buildExtrudedLogo(svgData) {
     });
   });
 
-  // SVG coordinates run downward, so flip the artwork into a normal 3D coordinate system.
   artwork.scale.y = -1;
   artwork.updateMatrixWorld(true);
 
@@ -57,7 +60,6 @@ function buildExtrudedLogo(svgData) {
   const normalized = new THREE.Group();
   normalized.add(artwork);
 
-  // Normalize the original 2048px SVG into scene units.
   const targetWidth = 4.9;
   const scale = targetWidth / Math.max(size.x, 1);
   normalized.scale.setScalar(scale);
@@ -65,18 +67,50 @@ function buildExtrudedLogo(svgData) {
   return normalized;
 }
 
+function disposeObject(object) {
+  object.traverse((child) => {
+    child.geometry?.dispose?.();
+    if (Array.isArray(child.material)) child.material.forEach((material) => material.dispose());
+    else child.material?.dispose?.();
+  });
+}
+
 export default function Logo3D() {
-  const tiltGroup = useRef();
+  const entranceGroup = useRef(null);
+  const tiltGroup = useRef(null);
+  const startedAt = useRef(null);
   const svgData = useLoader(SVGLoader, logoUrl);
   const viewport = useThree((state) => state.viewport);
   const logoObject = useMemo(() => buildExtrudedLogo(svgData), [svgData]);
   const responsiveScale = Math.min(1, viewport.width / 5.2, viewport.height / 3.4);
+  const reducedMotion = useMemo(
+    () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    [],
+  );
+
+  useEffect(() => () => disposeObject(logoObject), [logoObject]);
 
   useFrame((state, delta) => {
-    if (!tiltGroup.current) return;
+    if (!tiltGroup.current || !entranceGroup.current) return;
 
-    const targetX = -state.pointer.y * MAX_TILT;
-    const targetY = state.pointer.x * MAX_TILT;
+    const elapsed = state.clock.getElapsedTime();
+    if (startedAt.current === null) startedAt.current = elapsed;
+
+    const introProgress = reducedMotion
+      ? 1
+      : THREE.MathUtils.clamp((elapsed - startedAt.current) / INTRO_DURATION, 0, 1);
+    const introEase = THREE.MathUtils.smootherstep(introProgress, 0, 1);
+
+    entranceGroup.current.scale.setScalar(THREE.MathUtils.lerp(0.68, 1, introEase));
+    entranceGroup.current.position.z = THREE.MathUtils.lerp(1.9, 0, introEase);
+    entranceGroup.current.rotation.z = THREE.MathUtils.lerp(
+      THREE.MathUtils.degToRad(-5),
+      0,
+      introEase,
+    );
+
+    const targetX = reducedMotion ? 0 : -state.pointer.y * MAX_TILT;
+    const targetY = reducedMotion ? 0 : state.pointer.x * MAX_TILT;
     const damping = 1 - Math.exp(-4.5 * delta);
 
     tiltGroup.current.rotation.x = THREE.MathUtils.lerp(
@@ -91,11 +125,17 @@ export default function Logo3D() {
     );
   });
 
-
   return (
-    <Float speed={1.05} rotationIntensity={0} floatIntensity={0.18} floatingRange={[-0.08, 0.08]}>
-      <group ref={tiltGroup} scale={responsiveScale}>
-        <primitive object={logoObject} />
+    <Float
+      speed={reducedMotion ? 0 : 1.05}
+      rotationIntensity={0}
+      floatIntensity={reducedMotion ? 0 : 0.18}
+      floatingRange={[-0.08, 0.08]}
+    >
+      <group ref={entranceGroup}>
+        <group ref={tiltGroup} scale={responsiveScale}>
+          <primitive object={logoObject} />
+        </group>
       </group>
     </Float>
   );
