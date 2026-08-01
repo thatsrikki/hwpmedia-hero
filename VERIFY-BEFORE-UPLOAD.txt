@@ -1,0 +1,18 @@
+Before uploading, confirm these exact paths exist:
+
+index.html
+package.json
+vite.config.js
+vercel.json
+src/main.jsx
+src/App.jsx
+src/styles.css
+src/assets/HWP Logo.svg
+src/components/HeroScene.jsx
+src/components/Logo3D.jsx
+
+Important:
+- index.html must begin with <!doctype html>
+- package.json must begin with {
+- vite.config.js must begin with import { defineConfig }
+- Do not upload files from inside nested folders individually.

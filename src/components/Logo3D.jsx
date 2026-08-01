@@ -30,19 +30,24 @@ function buildExtrudedLogo(svgData) {
 
       const fillColor = path.color?.clone?.() ?? new THREE.Color('#ffffff');
       const isRed = fillColor.r > 0.65 && fillColor.g < 0.4;
+      const bloomColor = isRed
+        ? new THREE.Color().setRGB(2.7, 0.045, 0.065)
+        : new THREE.Color().setRGB(1.3, 1.3, 1.25);
+
       const material = new THREE.MeshPhysicalMaterial({
         color: fillColor,
-        emissive: fillColor,
-        emissiveIntensity: isRed ? 0.075 : 0.02,
-        metalness: 0.1,
-        roughness: 0.3,
-        clearcoat: 0.3,
-        clearcoatRoughness: 0.48,
+        emissive: bloomColor,
+        emissiveIntensity: isRed ? 0.42 : 0.12,
+        metalness: 0.12,
+        roughness: 0.29,
+        clearcoat: 0.34,
+        clearcoatRoughness: 0.45,
         side: THREE.DoubleSide,
+        toneMapped: false,
       });
 
       const mesh = new THREE.Mesh(geometry, material);
-      mesh.castShadow = false;
+      mesh.castShadow = true;
       mesh.receiveShadow = false;
       artwork.add(mesh);
     });

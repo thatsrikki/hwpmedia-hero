@@ -1,24 +1,9 @@
-# GitHub and Vercel deployment checklist
+# HWP Media v2 deployment checklist
 
-The repository root must contain all of these items at the same level:
-
-- `package.json`
-- `index.html`
-- `vite.config.js`
-- `vercel.json`
-- `src/main.jsx`
-- `src/App.jsx`
-- `src/styles.css`
-- `src/components/HeroScene.jsx`
-- `src/components/Logo3D.jsx`
-- `src/assets/HWP Logo.svg`
-
-Do not upload only the loose files from the project root while leaving out the `src` folder.
-
-In Vercel:
-
-- Framework Preset: Vite
-- Root Directory: leave blank when the files above are at the repository root
-- Build Command: `npm run build`
-- Output Directory: `dist`
-- Node.js Version: 20.x
+1. Extract the ZIP.
+2. Upload the files and folders inside the extracted folder to the GitHub repository root.
+3. Confirm GitHub shows `src/main.jsx`, `src/App.jsx`, and `src/components/HeroScene.jsx`.
+4. Commit to a new branch named `v2-cinematic` for a safe Vercel preview.
+5. In Vercel, verify Framework = Vite, Build = `npm run build`, Output = `dist`, Node = 20.x.
+6. Review the preview on desktop and mobile before merging into `main`.
+7. Replace the placeholder booking URL in `src/App.jsx`.
