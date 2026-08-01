@@ -1,24 +1,11 @@
-# GitHub and Vercel deployment checklist
+# HWP Media v3 deployment checklist
 
-The repository root must contain all of these items at the same level:
-
-- `package.json`
-- `index.html`
-- `vite.config.js`
-- `vercel.json`
-- `src/main.jsx`
-- `src/App.jsx`
-- `src/styles.css`
-- `src/components/HeroScene.jsx`
-- `src/components/Logo3D.jsx`
-- `src/assets/HWP Logo.svg`
-
-Do not upload only the loose files from the project root while leaving out the `src` folder.
-
-In Vercel:
-
-- Framework Preset: Vite
-- Root Directory: leave blank when the files above are at the repository root
-- Build Command: `npm run build`
-- Output Directory: `dist`
-- Node.js Version: 20.x
+1. Create a new branch from the working `v2-browser-clean` branch.
+2. Suggested branch name: `v3-light-dark`.
+3. Extract the ZIP locally.
+4. Use GitHub **Add file → Upload files**.
+5. Drag the entire selection together: `src`, `index.html`, `package.json`, `vite.config.js`, and `vercel.json`.
+6. Confirm GitHub shows nested paths beginning with `/src/`.
+7. Commit with: `Add light-to-dark cinematic v3`.
+8. Wait for the Vercel preview deployment.
+9. Test desktop, mobile, scroll transition, logo motion, and service cards before merging.

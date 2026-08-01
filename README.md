@@ -1,6 +1,18 @@
-# HWP Media Three.js Hero
+# HWP Media v3 — Light to Dark Cinematic
 
-A responsive React 19 + Vite hero using Three.js, React Three Fiber, and Drei. The uploaded HWP SVG is loaded from `src/assets/HWP Logo.svg`, converted into real SVG shapes, and extruded into 3D geometry.
+This Vite + React Three Fiber build uses the red-and-charcoal HWP logo and shifts from a warm editorial light opening into a cinematic charcoal services section.
+
+## Included
+
+- Warm off-white opening theme
+- Smooth light-to-dark scroll transition
+- New red-and-charcoal SVG logo extruded in 3D
+- Lighting and material changes tied to scroll progress
+- Reflective floor and contact shadows
+- Red bloom, sparkles, orbital linework, and sweep lighting
+- Mid-scroll brand statement
+- Animated Brand Engine service cards
+- Responsive and reduced-motion behavior
 
 ## Run locally
 
@@ -9,37 +21,6 @@ npm install
 npm run dev
 ```
 
-## Production build
+## Deploy
 
-```bash
-npm run build
-npm run preview
-```
-
-## Deploy to Vercel
-
-1. Push this folder to GitHub.
-2. Import the repository into Vercel.
-3. Vercel should detect Vite automatically.
-4. Build command: `npm run build`
-5. Output directory: `dist`
-
-A `vercel.json` file is included for SPA routing and immutable asset caching.
-
-## Set the booking link
-
-Open `src/App.jsx` and replace:
-
-```js
-const BOOKING_URL = 'https://cal.com/your-booking-link';
-```
-
-with your Calendly, Cal.com, HoneyBook, or contact-page URL.
-
-## Main controls
-
-- Extrusion depth and bevel: `src/components/Logo3D.jsx`
-- Mouse tilt: `MAX_TILT` in `Logo3D.jsx`
-- Float speed/intensity: the `<Float>` settings in `Logo3D.jsx`
-- White key and red rim lights: `src/components/HeroScene.jsx`
-- Two-second headline delay: `.hero-copy` in `src/styles.css`
+Upload the complete project structure to a clean GitHub branch. Vercel will run `npm run build` automatically.

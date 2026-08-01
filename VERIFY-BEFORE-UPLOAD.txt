@@ -1,0 +1,16 @@
+HWP MEDIA V3 — VERIFY BEFORE UPLOAD
+
+At the GitHub upload screen, confirm these paths are visible:
+
+/src/App.jsx
+/src/main.jsx
+/src/styles.css
+/src/assets/HWP-RB.svg
+/src/components/HeroScene.jsx
+/src/components/Logo3D.jsx
+/index.html
+/package.json
+/vite.config.js
+/vercel.json
+
+Do not commit if App.jsx, Logo3D.jsx, styles.css, or the SVG appear at the repository root.
