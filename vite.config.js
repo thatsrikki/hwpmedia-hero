@@ -1,10 +1,27 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-
-export default defineConfig({
-  plugins: [react()],
-  build: {
-    target: 'es2022',
-    sourcemap: false,
+{
+  "name": "hwp-media-three-hero",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
-});
+  "dependencies": {
+    "@react-three/drei": "^10.0.0",
+    "@react-three/fiber": "^9.0.0",
+    "@react-three/postprocessing": "^3.0.4",
+    "postprocessing": "^6.39.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "three": "^0.179.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.4.0",
+    "vite": "^7.0.0"
+  },
+  "engines": {
+    "node": "20.x"
+  }
+}
